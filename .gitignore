@@ -1,0 +1,5 @@
+terrafrom.tfvars
+.terrafrom/*
+.terrafrom/modules
+builds/*
+src/*
