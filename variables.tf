@@ -30,6 +30,11 @@ variable "project_name" {
   type        = string
 }
 
+variable "project_id" {
+  description = "MongoDB Atlas project ID"
+  type        = string
+}
+
 variable "db_user" {
   description = "Database username"
   type        = string
@@ -44,3 +49,10 @@ variable "database_name" {
   description = "Database name for user permissions"
   type        = string
 }
+
+variable "ip_address" {
+  description = "IP Address of the NAT Gateway"
+  type        = string
+}
+
+

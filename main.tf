@@ -107,6 +107,14 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attach" {
   policy_arn = aws_iam_policy.lambda_sqs_policy.arn
 }
 
+resource "aws_secretsmanager_secret" "mongodb_secret" {
+  name = "mongodb_clarity_connection_string"
+}
+
+output "secret_arn" {
+  value = aws_secretsmanager_secret.mongodb_secret.arn
+}
+
 # ─────────────────────────────────────────────────────────────
 # Lambda Function with SQS Event Source
 # ─────────────────────────────────────────────────────────────
@@ -115,4 +123,40 @@ module "sqs_processor_lambda" {
   function_name      = "sqs-message-processor"
   role_arn           = aws_iam_role.lambda_role.arn
   event_source_arn   = aws_sqs_queue.api_queue.arn
+  event_source_url   = aws_sqs_queue.api_queue.url
+  mongo_secret_arn   = aws_secretsmanager_secret.mongodb_secret.arn
+}
+
+resource "mongodbatlas_cluster" "this" {
+  project_id    = var.project_id
+  name          = var.cluster_name
+  provider_name = "AWS"   # This is required for free-tier clusters
+  cloud_backup = false       # Free tier does not support backups
+  provider_region_name = var.region
+  provider_instance_size_name = "M0"
+  cluster_type         = "REPLICASET" # Required for free clusters
+}
+
+output "cluster_connection_strings" {
+  description = "mongo DB cluster connection string"
+  value       = mongodbatlas_cluster.this.connection_strings
+}
+
+resource "mongodbatlas_database_user" "this" {
+  username           = var.db_user
+  password           = var.db_password
+  project_id        = var.project_id
+  auth_database_name = "admin"
+
+  roles {
+    role_name     = "readWrite"
+    database_name = var.database_name
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "mongodb_secret_value" {
+  secret_id     = aws_secretsmanager_secret.mongodb_secret.id
+  secret_string = jsonencode({
+    connection_strings = mongodbatlas_cluster.this.connection_strings
+  })
 }

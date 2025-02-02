@@ -14,6 +14,11 @@ module "sqs_processor_lambda" {
   handler       = "index.handler"
   runtime       = "python3.9"
 
+  environment_variables = {
+    SQS_QUEUE_URL     = var.event_source_url
+    MONGO_SECRET_ARN  = var.mongo_secret_arn
+  }
+
   event_source_mapping = [{
     event_source_arn = var.event_source_arn
     batch_size       = 5
