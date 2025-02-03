@@ -2,7 +2,7 @@ name: Terraform Pipelibe
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main", "develop" ]
 
@@ -60,5 +60,5 @@ jobs:
       run: terraform plan
       
     - name: Deploy to Production
- #    if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main'
       run: terraform apply -auto-approve
