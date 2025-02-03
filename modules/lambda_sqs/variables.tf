@@ -21,3 +21,13 @@ variable mongo_secret_arn {
   description = "Mongo DB Secet - connection strings"
   type = string
 }
+
+variable aws_ecr_repository {
+  description = "AWS ECR repository URL"
+  type = string
+}
+
+variable image_tag {
+  description = "Docker image version tag"
+  type = string
+}
