@@ -1,13 +1,16 @@
-name: Terraform
+name: Terraform Pipelibe
 
 on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop ]
 env:
   AWS_REGION: eu-central-1
   TF_VERSION: 1.5.7  # Updated to latest version
+
+# Allows you to run this workflow manually from the Actions tab
+workflow_dispatch:
 
 jobs:
   terraform:
@@ -44,4 +47,3 @@ jobs:
     - name: Deploy to Production
  #    if: github.ref == 'refs/heads/main'
       run: terraform apply -auto-approve
-    
