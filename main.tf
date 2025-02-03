@@ -133,6 +133,14 @@ module "sqs_processor_lambda" {
   image_tag          = var.image_tag
 }
 
+# ─────────────────────────────────────────────────────────────
+# Add github runner extranl IP to Atlas allowd IP addresses
+# ─────────────────────────────────────────────────────────────
+resource "mongodbatlas_project_ip_access_list" "ip_list" {
+  project_id = var.project_id
+  ip_address = var.ip_address
+}
+
 resource "mongodbatlas_database_user" "this" {
   username           = var.db_user
   password           = var.db_password
@@ -143,14 +151,7 @@ resource "mongodbatlas_database_user" "this" {
     role_name     = "readWrite"
     database_name = var.database_name
   }
-}
-
-# ─────────────────────────────────────────────────────────────
-# Add github runner extranl IP to Atlas allowd IP addresses
-# ─────────────────────────────────────────────────────────────
-resource "mongodbatlas_project_ip_access_list" "ip_list" {
-  project_id = var.project_id
-  ip_address = var.ip_address
+  depends_on = [mongodbatlas_project_ip_access_list.ip_list]
 }
 
 resource "aws_secretsmanager_secret_version" "mongodb_secret_value" {
