@@ -145,6 +145,11 @@ resource "mongodbatlas_database_user" "this" {
   }
 }
 
+resource "mongodbatlas_project_ip_access_list" "ip_list" {
+  project_id = var.project_id
+  ip_address = var.ip_address
+}
+
 resource "aws_secretsmanager_secret_version" "mongodb_secret_value" {
   secret_id     = aws_secretsmanager_secret.mongodb_secret.id
   secret_string = jsonencode({
