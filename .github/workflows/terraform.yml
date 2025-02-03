@@ -13,6 +13,7 @@ env:
   AWS_REGION:               eu-central-1
   TF_VERSION:               1.5.7  # Updated to latest version
   TF_VAR_image_tag:         test-02
+  TF_VAR_region:            eu-central-1
   TF_VAR_cluster_name:      ${{ secrets.TF_VAR_CLUSTER_NAME }}
   TF_VAR_project_name:      ${{ secrets.TF_VAR_PROJECT_NAME }}
   TF_VAR_org_id:            ${{ secrets.TF_VAR_ORG_ID }}
