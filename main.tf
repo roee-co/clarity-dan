@@ -145,6 +145,9 @@ resource "mongodbatlas_database_user" "this" {
   }
 }
 
+# ─────────────────────────────────────────────────────────────
+# Add github runner extranl IP to Atlas allowd IP addresses
+# ─────────────────────────────────────────────────────────────
 resource "mongodbatlas_project_ip_access_list" "ip_list" {
   project_id = var.project_id
   ip_address = var.ip_address
