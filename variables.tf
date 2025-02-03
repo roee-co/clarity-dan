@@ -55,4 +55,13 @@ variable "ip_address" {
   type        = string
 }
 
+variable "connection_string" {
+  description = "Mongo DB connection string"
+  type        = string
+}
+
+variable image_tag {
+  description = "Docker image version tag"
+  type = string
+}
 

@@ -20,6 +20,10 @@ terraform {
       source  = "mongodb/mongodbatlas"
       version = "~> 1.7.0"
     }
+    local = {
+      source  = "hashicorp/local"
+      version = "~> 2.0"
+    }
   }
 
   backend "s3" {
@@ -125,27 +129,14 @@ module "sqs_processor_lambda" {
   event_source_arn   = aws_sqs_queue.api_queue.arn
   event_source_url   = aws_sqs_queue.api_queue.url
   mongo_secret_arn   = aws_secretsmanager_secret.mongodb_secret.arn
-}
-
-resource "mongodbatlas_cluster" "this" {
-  project_id    = var.project_id
-  name          = var.cluster_name
-  provider_name = "AWS"   # This is required for free-tier clusters
-  cloud_backup = false       # Free tier does not support backups
-  provider_region_name = var.region
-  provider_instance_size_name = "M0"
-  cluster_type         = "REPLICASET" # Required for free clusters
-}
-
-output "cluster_connection_strings" {
-  description = "mongo DB cluster connection string"
-  value       = mongodbatlas_cluster.this.connection_strings
+  aws_ecr_repository = aws_ecr_repository.lambda_ecr.repository_url
+  image_tag          = var.image_tag
 }
 
 resource "mongodbatlas_database_user" "this" {
   username           = var.db_user
   password           = var.db_password
-  project_id        = var.project_id
+  project_id         = var.project_id
   auth_database_name = "admin"
 
   roles {
@@ -157,6 +148,6 @@ resource "mongodbatlas_database_user" "this" {
 resource "aws_secretsmanager_secret_version" "mongodb_secret_value" {
   secret_id     = aws_secretsmanager_secret.mongodb_secret.id
   secret_string = jsonencode({
-    connection_strings = mongodbatlas_cluster.this.connection_strings
+    connection_string = var.connection_string
   })
 }
