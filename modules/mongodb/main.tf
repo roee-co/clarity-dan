@@ -34,5 +34,3 @@ resource "mongodbatlas_database_user" "this" {
     database_name = var.database_name
   }
 }
-
-
