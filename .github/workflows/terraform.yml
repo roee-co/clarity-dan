@@ -61,13 +61,6 @@ jobs:
     - name: Terraform Validate
       run: terraform validate
 
-    - name: Add IP to MongoDB Atlas
-      run: |
-        curl -X POST "https://cloud.mongodb.com/api/atlas/v1.0/groups/${{ secrets.TF_VAR_PROJECT_ID }}/accessList" \
-          -u "${{ secrets.TF_VAR_MONGO_PUBLIC_KEY }}:${{ secrets.TF_VAR_MONGO_PRIVATE_KEY }}" \
-          -H "Content-Type: application/json" \
-          --data '{ "ipAddress": "'"${{ env.IP }}"'","comment": "GitHub Action Runner"}'
-
     - name: Debug info
     - run: env | grep TF_VAR
     
