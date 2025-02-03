@@ -3,7 +3,7 @@ module "lambda_container-image" {
   version = "7.20.1"
 
   function_name  = var.function_name
-  description    = "Updated Lambda function from ECR docker image"
+  description    = "Lambda function from ECR docker image"
   package_type   = "Image"
   create_package = false
   image_uri      = "${var.aws_ecr_repository}:${var.image_tag}"
