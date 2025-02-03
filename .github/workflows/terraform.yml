@@ -2,8 +2,10 @@ name: Terraform Pipelibe
 
 on:
   push:
+    paths-ignore: [ "src/**", "ocs/**", "README.md" ]
     branches: [ "main" ]
   pull_request:
+    paths-ignore: [ "src/**", "ocs/**", "README.md" ]
     branches: [ "main", "develop" ]
 
   # Allows you to run this workflow manually from the Actions tab
