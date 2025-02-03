@@ -62,7 +62,7 @@ jobs:
       run: terraform validate
 
     - name: Debug info
-    - run: env | grep TF_VAR
+      run: env | grep TF_VAR
     
     - name: Terraform Plan
       run: terraform plan
